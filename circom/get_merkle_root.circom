@@ -1,11 +1,11 @@
 pragma circom 2.0.0;
 include "../node_modules/circomlib/circuits/mimc.circom";
 
-template DualMux() {
+template DualMux(){
   signal input in[2];
   signal input s;
   signal output out[2];
-
+  
   s*(s-1) === 0;
 
   out[0] <== (in[1] - in[0])*s + in[0];
@@ -15,7 +15,7 @@ template DualMux() {
 template GetMerkleRoot(k) {
   signal input leaf;
   signal input paths2_root[k];
-  signal input path2_root_pos[k];
+  signal input paths2_root_pos[k];
 
   signal output out;
 
@@ -26,10 +26,10 @@ template GetMerkleRoot(k) {
     selectors[i] = DualMux();
     selectors[i].in[0] <== i == 0 ? leaf : hashers[i-1].out;
     selectors[i].in[1] <== paths2_root[i];
-    selectors[i].s <== path2_root_pos[i];
+    selectors[i].s <== paths2_root_pos[i];
 
     hashers[i] = MultiMiMC7(2, 91);
-    hashers[i].k <== i;
+    hashers[i].k <== 1;
     hashers[i].in[0] <== selectors[i].out[0];
     hashers[i].in[1] <== selectors[i].out[1];
   }
